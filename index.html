@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Digital Music Studio</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-bg: #0a0a0a;
+        --secondary-bg: #1a1a2e;
+        --accent-color: #e94560;
+        --text-color: #f5f5f5;
+        --glow-color: #00d4ff;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --hover-glow: rgba(0, 212, 255, 0.3);
+        --drum-accent: #ff6b35;
+        --piano-accent: #4ecdc4;
+      }
+
+      body {
+        font-family: "Exo 2", sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--primary-bg) 0%,
+          var(--secondary-bg) 100%
+        );
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Animated background particles */
+      .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: var(--glow-color);
+        border-radius: 50%;
+        animation: float 6s infinite ease-in-out;
+        opacity: 0.6;
+        box-shadow: 0 0 10px var(--glow-color);
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+        50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+      }
+
+      /* Theme selector */
+      .theme-selector {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 10px;
+        border-radius: 25px;
+        backdrop-filter: blur(10px);
+      }
+
+      .theme-btn {
+        width: 35px;
+        height: 35px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .theme-btn:hover {
+        transform: scale(1.2);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .theme-btn.neon { background: linear-gradient(45deg, #0a0a0a, #1a1a2e); }
+      .theme-btn.cyberpunk { background: linear-gradient(45deg, #ff006e, #8338ec); }
+      .theme-btn.ocean { background: linear-gradient(45deg, #006994, #00d4ff); }
+      .theme-btn.forest { background: linear-gradient(45deg, #2d5016, #a4de6c); }
+      .theme-btn.sunset { background: linear-gradient(45deg, #ff4500, #ffa500); }
+
+      /* Header */
+      .header {
+        text-align: center;
+        padding: 80px 20px 60px;
+        position: relative;
+        z-index: 10;
+      }
+
+      .logo {
+        font-family: "Orbitron", monospace;
+        font-size: clamp(3rem, 8vw, 7rem);
+        font-weight: 900;
+        color: var(--text-color);
+        margin-bottom: 20px;
+        text-shadow: 0 0 15px var(--glow-color);
+        animation: subtleGlow 4s ease-in-out infinite alternate;
+        position: relative;
+      }
+
+      .logo::before {
+        content: "DIGITAL MUSIC STUDIO";
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: linear-gradient(45deg, var(--glow-color), var(--accent-color), var(--glow-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        opacity: 0.3;
+        z-index: -1;
+      }
+
+      @keyframes subtleGlow {
+        from { 
+          text-shadow: 0 0 10px var(--glow-color);
+        }
+        to { 
+          text-shadow: 0 0 20px var(--glow-color), 0 0 30px var(--glow-color);
+        }
+      }
+
+      .subtitle {
+        font-size: clamp(1.2rem, 3vw, 2rem);
+        color: var(--text-color);
+        opacity: 0.9;
+        margin-bottom: 10px;
+        font-weight: 300;
+      }
+
+      .tagline {
+        font-size: clamp(0.9rem, 2vw, 1.2rem);
+        color: var(--text-color);
+        opacity: 0.7;
+        font-weight: 300;
+      }
+
+      /* Instruments section */
+      .instruments {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        padding: 40px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+      }
+
+      .instrument-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(15px);
+        border-radius: 25px;
+        padding: 40px 30px;
+        width: 400px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      }
+
+      .instrument-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s;
+      }
+
+      .instrument-card:hover::before {
+        left: 100%;
+      }
+
+      .instrument-card:hover {
+        transform: translateY(-15px) scale(1.05);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        border-color: var(--glow-color);
+      }
+
+      .drum-card {
+        border-color: var(--drum-accent);
+      }
+
+      .drum-card:hover {
+        box-shadow: 0 25px 50px rgba(255, 107, 53, 0.3), 0 0 40px rgba(255, 107, 53, 0.2);
+        border-color: var(--drum-accent);
+      }
+
+      .piano-card {
+        border-color: var(--piano-accent);
+      }
+
+      .piano-card:hover {
+        box-shadow: 0 25px 50px rgba(78, 205, 196, 0.3), 0 0 40px rgba(78, 205, 196, 0.2);
+        border-color: var(--piano-accent);
+      }
+
+      .instrument-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        display: block;
+        animation: bounce 2s infinite;
+      }
+
+      @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+      }
+
+      .instrument-title {
+        font-family: "Orbitron", monospace;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-color);
+        margin-bottom: 15px;
+        text-shadow: 0 0 10px currentColor;
+      }
+
+      .drum-card .instrument-title {
+        color: var(--drum-accent);
+      }
+
+      .piano-card .instrument-title {
+        color: var(--piano-accent);
+      }
+
+      .instrument-description {
+        color: var(--text-color);
+        opacity: 0.8;
+        line-height: 1.6;
+        margin-bottom: 25px;
+        font-size: 1.1rem;
+      }
+
+      .play-button {
+        background: linear-gradient(45deg, var(--accent-color), var(--glow-color));
+        border: none;
+        padding: 15px 30px;
+        border-radius: 50px;
+        color: white;
+        font-family: "Orbitron", monospace;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .drum-card .play-button {
+        background: linear-gradient(45deg, var(--drum-accent), #ff8f65);
+      }
+
+      .piano-card .play-button {
+        background: linear-gradient(45deg, var(--piano-accent), #7fece4);
+      }
+
+      .play-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+      }
+
+      .play-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s;
+      }
+
+      .play-button:hover::before {
+        left: 100%;
+      }
+
+      /* Features section */
+      .features {
+        padding: 80px 20px;
+        text-align: center;
+        position: relative;
+        z-index: 10;
+      }
+
+      .features-title {
+        font-family: "Orbitron", monospace;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        color: var(--text-color);
+        margin-bottom: 50px;
+        text-shadow: 0 0 20px var(--glow-color);
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .feature-item {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .feature-item:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border-color: var(--glow-color);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        color: var(--glow-color);
+      }
+
+      .feature-title {
+        font-family: "Orbitron", monospace;
+        font-size: 1.5rem;
+        color: var(--text-color);
+        margin-bottom: 15px;
+      }
+
+      .feature-description {
+        color: var(--text-color);
+        opacity: 0.8;
+        line-height: 1.6;
+      }
+
+      /* Audio visualizer */
+      .visualizer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        gap: 3px;
+        padding: 20px;
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      .vis-bar {
+        width: 4px;
+        background: linear-gradient(to top, var(--accent-color), var(--glow-color));
+        border-radius: 2px;
+        transition: height 0.1s ease-out;
+        height: 10px;
+        animation: pulse 2s infinite ease-in-out;
+      }
+
+      @keyframes pulse {
+        0%, 100% { height: 10px; opacity: 0.5; }
+        50% { height: 30px; opacity: 1; }
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-color);
+        opacity: 0.7;
+        position: relative;
+        z-index: 10;
+      }
+
+      /* Theme variations */
+      body.cyberpunk {
+        --primary-bg: #0f0f23;
+        --secondary-bg: #ff006e;
+        --accent-color: #8338ec;
+        --glow-color: #ff006e;
+        --drum-accent: #ff0080;
+        --piano-accent: #8000ff;
+      }
+
+      body.ocean {
+        --primary-bg: #001122;
+        --secondary-bg: #006994;
+        --accent-color: #00d4ff;
+        --glow-color: #00ffff;
+        --drum-accent: #0099cc;
+        --piano-accent: #00ccaa;
+      }
+
+      body.forest {
+        --primary-bg: #0d1b0d;
+        --secondary-bg: #2d5016;
+        --accent-color: #a4de6c;
+        --glow-color: #76c442;
+        --drum-accent: #8bc34a;
+        --piano-accent: #66bb6a;
+      }
+
+      body.sunset {
+        --primary-bg: #1a0a00;
+        --secondary-bg: #ff4500;
+        --accent-color: #ffa500;
+        --glow-color: #ffff00;
+        --drum-accent: #ff6347;
+        --piano-accent: #ffa500;
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .instruments {
+          flex-direction: column;
+          align-items: center;
+          gap: 30px;
+        }
+
+        .instrument-card {
+          width: 90%;
+          max-width: 400px;
+        }
+
+        .theme-selector {
+          top: 10px;
+          right: 10px;
+          padding: 8px;
+        }
+
+        .theme-btn {
+          width: 30px;
+          height: 30px;
+        }
+
+        .header {
+          padding: 60px 20px 40px;
+        }
+      }
+
+      /* Loading animation */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--primary-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+      }
+
+      .loading-overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .loader {
+        width: 60px;
+        height: 60px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top: 3px solid var(--glow-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loader"></div>
+    </div>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="theme-selector">
+      <button class="theme-btn neon" onclick="setTheme('neon')" title="Neon Theme"></button>
+      <button class="theme-btn cyberpunk" onclick="setTheme('cyberpunk')" title="Cyberpunk Theme"></button>
+      <button class="theme-btn ocean" onclick="setTheme('ocean')" title="Ocean Theme"></button>
+      <button class="theme-btn forest" onclick="setTheme('forest')" title="Forest Theme"></button>
+      <button class="theme-btn sunset" onclick="setTheme('sunset')" title="Sunset Theme"></button>
+    </div>
+
+    <header class="header">
+      <h1 class="logo">DIGITAL MUSIC STUDIO</h1>
+      <p class="subtitle">Experience Music Like Never Before</p>
+      <p class="tagline">Premium virtual instruments at your fingertips</p>
+    </header>
+
+    <section class="instruments">
+      <div class="instrument-card drum-card" onclick="openDrumKit()">
+        <span class="instrument-icon">🥁</span>
+        <h2 class="instrument-title">DRUM KIT</h2>
+        <p class="instrument-description">
+          Experience the power of rhythm with our enhanced digital drum kit. 
+          Multiple themes, realistic sound effects, and responsive controls.
+        </p>
+        <button class="play-button">Play Drums</button>
+      </div>
+
+      <div class="instrument-card piano-card" onclick="openPiano()">
+        <span class="instrument-icon">🎹</span>
+        <h2 class="instrument-title">PIANO</h2>
+        <p class="instrument-description">
+          Create beautiful melodies with our premium virtual piano. 
+          Rich harmonic sounds, visual feedback, and multiple octaves.
+        </p>
+        <button class="play-button">Play Piano</button>
+      </div>
+    </section>
+
+    <section class="features">
+      <h2 class="features-title">Premium Features</h2>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">🎨</div>
+          <h3 class="feature-title">Multiple Themes</h3>
+          <p class="feature-description">Choose from 5 stunning themes including Neon, Cyberpunk, Ocean, Forest, and Sunset.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔊</div>
+          <h3 class="feature-title">High-Quality Audio</h3>
+          <p class="feature-description">Experience crystal-clear sound with Web Audio API and synthetic sound generation.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📱</div>
+          <h3 class="feature-title">Responsive Design</h3>
+          <p class="feature-description">Optimized for all devices - desktop, tablet, and mobile with touch support.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">✨</div>
+          <h3 class="feature-title">Visual Effects</h3>
+          <p class="feature-description">Immersive visual feedback with animations, ripple effects, and real-time visualizers.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="visualizer" id="visualizer">
+      <div class="vis-bar" style="animation-delay: 0s;"></div>
+      <div class="vis-bar" style="animation-delay: 0.1s;"></div>
+      <div class="vis-bar" style="animation-delay: 0.2s;"></div>
+      <div class="vis-bar" style="animation-delay: 0.3s;"></div>
+      <div class="vis-bar" style="animation-delay: 0.4s;"></div>
+      <div class="vis-bar" style="animation-delay: 0.5s;"></div>
+      <div class="vis-bar" style="animation-delay: 0.6s;"></div>
+      <div class="vis-bar" style="animation-delay: 0.7s;"></div>
+      <div class="vis-bar" style="animation-delay: 0.8s;"></div>
+      <div class="vis-bar" style="animation-delay: 0.9s;"></div>
+    </div>
+
+    <footer class="footer">
+      <p>Made with ❤️ in India | Digital Music Studio &copy; 2025</p>
+    </footer>
+
+    <script>
+      // Theme management
+      function setTheme(theme) {
+        document.body.className = theme === 'neon' ? '' : theme;
+        localStorage.setItem('musicStudioTheme', theme);
+      }
+
+      // Navigation functions
+      function openDrumKit() {
+        // In a real implementation, you would navigate to the drum kit page
+        window.location.href = 'drumtake1.html';
+        
+      }
+
+      function openPiano() {
+        // In a real implementation, you would navigate to the piano page
+        window.location.href = 'pianoFull.html';
+      }
+
+      // Create floating particles
+      function createParticles() {
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'particle';
+          particle.style.left = Math.random() * 100 + '%';
+          particle.style.top = Math.random() * 100 + '%';
+          particle.style.animationDelay = Math.random() * 6 + 's';
+          particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+          particlesContainer.appendChild(particle);
+        }
+      }
+
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        // Load saved theme
+        const savedTheme = localStorage.getItem('musicStudioTheme') || 'neon';
+        setTheme(savedTheme);
+
+        // Create particles
+        createParticles();
+
+        // Hide loading overlay
+        setTimeout(() => {
+          document.getElementById('loadingOverlay').classList.add('hidden');
+        }, 1500);
+
+        // Add click sound effect simulation
+        document.querySelectorAll('.instrument-card, .play-button').forEach(element => {
+          element.addEventListener('click', function() {
+            // Visual feedback
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+              this.style.transform = '';
+            }, 150);
+          });
+        });
+
+        // Animate visualizer bars randomly
+        setInterval(() => {
+          document.querySelectorAll('.vis-bar').forEach(bar => {
+            const height = Math.random() * 40 + 10;
+            bar.style.height = height + 'px';
+          });
+        }, 200);
+      });
+
+      // Add hover sound effects (visual only)
+      document.addEventListener('mouseover', function(e) {
+        if (e.target.classList.contains('instrument-card')) {
+          e.target.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        }
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', function(e) {
+        if (e.key === '1') openDrumKit();
+        if (e.key === '2') openPiano();
+        if (e.key === 't' || e.key === 'T') {
+          // Cycle through themes
+          const themes = ['neon', 'cyberpunk', 'ocean', 'forest', 'sunset'];
+          const currentTheme = localStorage.getItem('musicStudioTheme') || 'neon';
+          const currentIndex = themes.indexOf(currentTheme);
+          const nextTheme = themes[(currentIndex + 1) % themes.length];
+          setTheme(nextTheme);
+        }
+      });
+    </script>
+  </body>
+</html>

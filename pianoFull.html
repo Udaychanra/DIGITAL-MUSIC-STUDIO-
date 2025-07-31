@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Enhanced Piano</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-bg: #0a0a0a;
+        --secondary-bg: #1a1a2e;
+        --accent-color: #e94560;
+        --text-color: #f5f5f5;
+        --white-key: #f8f9fa;
+        --black-key: #212529;
+        --key-shadow: rgba(0, 0, 0, 0.3);
+        --glow-color: #00d4ff;
+        --piano-wood: #8b4513;
+        --piano-metal: #c0c0c0;
+      }
+
+      body {
+        font-family: "Exo 2", sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--primary-bg) 0%,
+          var(--secondary-bg) 100%
+        );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+            circle at 20% 20%,
+            rgba(233, 69, 96, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(0, 212, 255, 0.1) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .theme-selector {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+        z-index: 100;
+      }
+
+      .theme-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .theme-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .theme-btn.neon {
+        background: linear-gradient(45deg, #0a0a0a, #1a1a2e);
+      }
+      .theme-btn.cyberpunk {
+        background: linear-gradient(45deg, #ff006e, #8338ec);
+      }
+      .theme-btn.ocean {
+        background: linear-gradient(45deg, #006994, #00d4ff);
+      }
+      .theme-btn.forest {
+        background: linear-gradient(45deg, #2d5016, #a4de6c);
+      }
+      .theme-btn.sunset {
+        background: linear-gradient(45deg, #ff4500, #ffa500);
+      }
+
+      h1 {
+        font-family: "Orbitron", monospace;
+        font-size: clamp(3rem, 8vw, 6rem);
+        color: var(--text-color);
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 0 20px var(--glow-color);
+        animation: titleGlow 3s ease-in-out infinite alternate;
+        position: relative;
+      }
+
+      @keyframes titleGlow {
+        from {
+          text-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color);
+        }
+        to {
+          text-shadow: 0 0 30px var(--glow-color), 0 0 60px var(--glow-color),
+            0 0 80px var(--glow-color);
+        }
+      }
+
+      .volume-control {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-color);
+        font-size: 0.9rem;
+      }
+
+      .volume-slider {
+        width: 100px;
+        height: 5px;
+        border-radius: 5px;
+        background: var(--black-key);
+        outline: none;
+        cursor: pointer;
+      }
+
+      .note-indicator {
+        position: absolute;
+        top: 50%;
+        left: 50px;
+        transform: translateY(-50%);
+        color: var(--text-color);
+        font-family: "Orbitron", monospace;
+        font-size: 1.2rem;
+        opacity: 0;
+        transition: all 0.3s ease;
+        text-shadow: 0 0 10px var(--glow-color);
+      }
+
+      .note-indicator.active {
+        opacity: 1;
+        animation: noteGlow 0.5s ease-out;
+      }
+
+      @keyframes noteGlow {
+        0% {
+          transform: translateY(-50%) scale(1);
+        }
+        50% {
+          transform: translateY(-50%) scale(1.2);
+        }
+        100% {
+          transform: translateY(-50%) scale(1);
+        }
+      }
+
+      .piano-container {
+        background: linear-gradient(145deg, var(--piano-wood), #654321);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        border: 3px solid var(--piano-metal);
+        position: relative;
+      }
+
+      .piano-container::before {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        height: 20px;
+        background: linear-gradient(
+          90deg,
+          var(--piano-metal),
+          #a0a0a0,
+          var(--piano-metal)
+        );
+        border-radius: 10px;
+      }
+
+      .piano {
+        display: flex;
+        position: relative;
+        background: #2c1810;
+        padding: 20px 10px 10px;
+        border-radius: 10px;
+        box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.5);
+      }
+
+      .key {
+        position: relative;
+        border: none;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        font-family: "Orbitron", monospace;
+        font-weight: 600;
+        outline: none;
+        user-select: none;
+      }
+
+      .white-key {
+        width: 60px;
+        height: 200px;
+        background: linear-gradient(180deg, var(--white-key) 0%, #e9ecef 100%);
+        border: 2px solid #dee2e6;
+        border-radius: 0 0 8px 8px;
+        margin: 0 1px;
+        box-shadow: 0 8px 0 var(--key-shadow), 0 8px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1;
+        color: #333;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 15px;
+      }
+
+      .white-key:hover {
+        background: linear-gradient(180deg, #e9ecef 0%, #dee2e6 100%);
+        transform: translateY(2px);
+        box-shadow: 0 6px 0 var(--key-shadow), 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .white-key:active,
+      .white-key.pressed {
+        background: linear-gradient(180deg, #dee2e6 0%, #ced4da 100%);
+        transform: translateY(4px);
+        box-shadow: 0 4px 0 var(--key-shadow), 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .black-key {
+        width: 35px;
+        height: 120px;
+        background: linear-gradient(180deg, var(--black-key) 0%, #000 100%);
+        border: 2px solid #000;
+        border-radius: 0 0 5px 5px;
+        position: absolute;
+        z-index: 2;
+        box-shadow: 0 6px 0 #000, 0 6px 12px rgba(0, 0, 0, 0.5);
+        color: var(--white-key);
+        font-size: 0.7rem;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 10px;
+      }
+
+      .black-key:hover {
+        background: linear-gradient(180deg, #343a40 0%, #000 100%);
+        transform: translateY(2px);
+        box-shadow: 0 4px 0 #000, 0 4px 8px rgba(0, 0, 0, 0.5);
+      }
+
+      .black-key:active,
+      .black-key.pressed {
+        background: linear-gradient(180deg, #495057 0%, #212529 100%);
+        transform: translateY(3px);
+        box-shadow: 0 3px 0 #000, 0 3px 6px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Black key positions */
+      .black-key:nth-of-type(1) {
+        left: 43px;
+      } /* C# */
+      .black-key:nth-of-type(2) {
+        left: 106px;
+      } /* D# */
+      .black-key:nth-of-type(3) {
+        left: 231px;
+      } /* F# */
+      .black-key:nth-of-type(4) {
+        left: 294px;
+      } /* G# */
+      .black-key:nth-of-type(5) {
+        left: 357px;
+      } /* A# */
+      .black-key:nth-of-type(6) {
+        left: 481px;
+      } /* C# */
+      .black-key:nth-of-type(7) {
+        left: 544px;
+      } /* D# */
+
+      .key.glow {
+        animation: keyGlow 0.3s ease-out;
+      }
+
+      @keyframes keyGlow {
+        0% {
+          box-shadow: 0 0 0 var(--glow-color);
+        }
+        50% {
+          box-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color);
+        }
+        100% {
+          box-shadow: 0 0 0 var(--glow-color);
+        }
+      }
+
+      .wave-visualizer {
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 2px;
+        align-items: end;
+        height: 60px;
+      }
+
+      .wave-bar {
+        width: 3px;
+        background: linear-gradient(
+          to top,
+          var(--accent-color),
+          var(--glow-color)
+        );
+        border-radius: 2px;
+        transition: height 0.1s ease-out;
+        height: 5px;
+      }
+
+      .key-labels {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: var(--text-color);
+        font-size: 0.8rem;
+        text-align: center;
+        opacity: 0.7;
+        font-family: "Exo 2", sans-serif;
+      }
+
+      footer {
+        color: var(--text-color);
+        font-family: "Exo 2", sans-serif;
+        margin-top: 2rem;
+        opacity: 0.8;
+        font-size: 0.9rem;
+        text-align: center;
+      }
+
+      /* Theme variations */
+      body.cyberpunk {
+        --primary-bg: #0f0f23;
+        --secondary-bg: #ff006e;
+        --accent-color: #8338ec;
+        --glow-color: #ff006e;
+        --white-key: #f0f0f0;
+        --black-key: #1a0033;
+        --piano-wood: #4a0e4e;
+        --piano-metal: #ff006e;
+      }
+
+      body.ocean {
+        --primary-bg: #001122;
+        --secondary-bg: #006994;
+        --accent-color: #00d4ff;
+        --glow-color: #00ffff;
+        --white-key: #e6f7ff;
+        --black-key: #003366;
+        --piano-wood: #004466;
+        --piano-metal: #0099cc;
+      }
+
+      body.forest {
+        --primary-bg: #0d1b0d;
+        --secondary-bg: #2d5016;
+        --accent-color: #a4de6c;
+        --glow-color: #76c442;
+        --white-key: #f0f8e6;
+        --black-key: #1a3d1a;
+        --piano-wood: #654321;
+        --piano-metal: #4a7c59;
+      }
+
+      body.sunset {
+        --primary-bg: #1a0a00;
+        --secondary-bg: #ff4500;
+        --accent-color: #ffa500;
+        --glow-color: #ffff00;
+        --white-key: #fff8e6;
+        --black-key: #331100;
+        --piano-wood: #8b4513;
+        --piano-metal: #cc6600;
+      }
+
+      @media (max-width: 768px) {
+        .piano-container {
+          padding: 20px 15px;
+          margin: 0 10px;
+        }
+
+        .piano {
+          padding: 15px 5px 5px;
+        }
+
+        .white-key {
+          width: 45px;
+          height: 150px;
+          font-size: 0.7rem;
+        }
+
+        .black-key {
+          width: 28px;
+          height: 90px;
+          font-size: 0.6rem;
+        }
+
+        .black-key:nth-of-type(1) {
+          left: 32px;
+        }
+        .black-key:nth-of-type(2) {
+          left: 78px;
+        }
+        .black-key:nth-of-type(3) {
+          left: 171px;
+        }
+        .black-key:nth-of-type(4) {
+          left: 217px;
+        }
+        .black-key:nth-of-type(5) {
+          left: 263px;
+        }
+        .black-key:nth-of-type(6) {
+          left: 356px;
+        }
+        .black-key:nth-of-type(7) {
+          left: 402px;
+        }
+
+        .volume-control,
+        .theme-selector {
+          position: relative;
+          top: auto;
+          left: auto;
+          right: auto;
+          margin: 10px;
+        }
+
+        h1 {
+          margin-bottom: 1rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="theme-selector">
+      <button
+        class="theme-btn neon"
+        onclick="setTheme('neon')"
+        title="Neon Theme"
+      ></button>
+      <button
+        class="theme-btn cyberpunk"
+        onclick="setTheme('cyberpunk')"
+        title="Cyberpunk Theme"
+      ></button>
+      <button
+        class="theme-btn ocean"
+        onclick="setTheme('ocean')"
+        title="Ocean Theme"
+      ></button>
+      <button
+        class="theme-btn forest"
+        onclick="setTheme('forest')"
+        title="Forest Theme"
+      ></button>
+      <button
+        class="theme-btn sunset"
+        onclick="setTheme('sunset')"
+        title="Sunset Theme"
+      ></button>
+    </div>
+
+    <div class="volume-control">
+      <span>🔊</span>
+      <input
+        type="range"
+        class="volume-slider"
+        min="0"
+        max="100"
+        value="70"
+        id="volumeSlider"
+      />
+      <span id="volumeValue">70%</span>
+    </div>
+
+    <div class="note-indicator" id="noteIndicator">C4</div>
+
+    <h1 id="title">🎹 PIANO 🎹</h1>
+
+    <div class="piano-container">
+      <div class="piano">
+        <!-- White Keys -->
+        <button class="key white-key" data-note="C4" data-key="a">A</button>
+        <button class="key white-key" data-note="D4" data-key="s">S</button>
+        <button class="key white-key" data-note="E4" data-key="d">D</button>
+        <button class="key white-key" data-note="F4" data-key="f">F</button>
+        <button class="key white-key" data-note="G4" data-key="g">G</button>
+        <button class="key white-key" data-note="A4" data-key="h">H</button>
+        <button class="key white-key" data-note="B4" data-key="j">J</button>
+        <button class="key white-key" data-note="C5" data-key="k">K</button>
+        <button class="key white-key" data-note="D5" data-key="l">L</button>
+
+        <!-- Black Keys -->
+        <button class="key black-key" data-note="C#4" data-key="w">W</button>
+        <button class="key black-key" data-note="D#4" data-key="e">E</button>
+        <button class="key black-key" data-note="F#4" data-key="t">T</button>
+        <button class="key black-key" data-note="G#4" data-key="y">Y</button>
+        <button class="key black-key" data-note="A#4" data-key="u">U</button>
+        <button class="key black-key" data-note="C#5" data-key="o">O</button>
+        <button class="key black-key" data-note="D#5" data-key="p">P</button>
+      </div>
+    </div>
+
+    <div class="wave-visualizer" id="waveVisualizer">
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+    </div>
+
+    <div class="key-labels">
+      Use keyboard keys A-L for white keys, W-E-T-Y-U-O-P for black keys
+    </div>
+
+    <footer>Made with ❤️ in India | Enhanced Piano with Dynamic Effects</footer>
+
+    <script>
+      // Audio context for piano sounds
+      let audioContext;
+      let masterVolume = 0.7;
+      let sounds = {};
+
+      // Note frequencies (4th and 5th octave)
+      const noteFrequencies = {
+        C4: 261.63,
+        "C#4": 277.18,
+        D4: 293.66,
+        "D#4": 311.13,
+        E4: 329.63,
+        F4: 349.23,
+        "F#4": 369.99,
+        G4: 392.0,
+        "G#4": 415.3,
+        A4: 440.0,
+        "A#4": 466.16,
+        B4: 493.88,
+        C5: 523.25,
+        "C#5": 554.37,
+        D5: 587.33,
+        "D#5": 622.25,
+      };
+
+      // Initialize audio context
+      function initAudio() {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
+        }
+      }
+
+      // Create piano sound
+      function createPianoSound(note) {
+        return {
+          play: function () {
+            this.createSyntheticPiano(note);
+          },
+          createSyntheticPiano: function (noteName) {
+            if (!audioContext) return;
+
+            const frequency = noteFrequencies[noteName];
+            if (!frequency) return;
+
+            // Create oscillators for rich piano sound
+            const fundamental = audioContext.createOscillator();
+            const harmonic2 = audioContext.createOscillator();
+            const harmonic3 = audioContext.createOscillator();
+
+            // Create gain nodes
+            const mainGain = audioContext.createGain();
+            const harmonic2Gain = audioContext.createGain();
+            const harmonic3Gain = audioContext.createGain();
+            const masterGain = audioContext.createGain();
+
+            // Create filter for warmth
+            const filter = audioContext.createBiquadFilter();
+            filter.type = "lowpass";
+            filter.frequency.setValueAtTime(2000, audioContext.currentTime);
+
+            // Set frequencies
+            fundamental.frequency.setValueAtTime(
+              frequency,
+              audioContext.currentTime
+            );
+            harmonic2.frequency.setValueAtTime(
+              frequency * 2,
+              audioContext.currentTime
+            );
+            harmonic3.frequency.setValueAtTime(
+              frequency * 3,
+              audioContext.currentTime
+            );
+
+            // Set waveforms
+            fundamental.type = "sine";
+            harmonic2.type = "sine";
+            harmonic3.type = "triangle";
+
+            // Connect nodes
+            fundamental.connect(mainGain);
+            harmonic2.connect(harmonic2Gain);
+            harmonic3.connect(harmonic3Gain);
+
+            mainGain.connect(filter);
+            harmonic2Gain.connect(filter);
+            harmonic3Gain.connect(filter);
+            filter.connect(masterGain);
+            masterGain.connect(audioContext.destination);
+
+            // Set volumes
+            mainGain.gain.setValueAtTime(
+              masterVolume * 0.4,
+              audioContext.currentTime
+            );
+            harmonic2Gain.gain.setValueAtTime(
+              masterVolume * 0.2,
+              audioContext.currentTime
+            );
+            harmonic3Gain.gain.setValueAtTime(
+              masterVolume * 0.1,
+              audioContext.currentTime
+            );
+
+            // Envelope
+            masterGain.gain.setValueAtTime(0, audioContext.currentTime);
+            masterGain.gain.linearRampToValueAtTime(
+              masterVolume * 0.3,
+              audioContext.currentTime + 0.01
+            );
+            masterGain.gain.exponentialRampToValueAtTime(
+              0.01,
+              audioContext.currentTime + 1.5
+            );
+
+            // Start oscillators
+            const startTime = audioContext.currentTime;
+            fundamental.start(startTime);
+            harmonic2.start(startTime);
+            harmonic3.start(startTime);
+
+            // Stop oscillators
+            fundamental.stop(startTime + 1.5);
+            harmonic2.stop(startTime + 1.5);
+            harmonic3.stop(startTime + 1.5);
+          },
+        };
+      }
+
+      // Preload piano sounds
+      function preloadSounds() {
+        Object.keys(noteFrequencies).forEach((note) => {
+          sounds[note] = createPianoSound(note);
+        });
+      }
+
+      // Play note
+      function playNote(note) {
+        if (sounds[note]) {
+          sounds[note].play();
+        }
+
+        // Visual feedback
+        animateWaveVisualizer();
+        showNoteIndicator(note);
+      }
+
+      // Key animation
+      function animateKey(key) {
+        const keyElement = document.querySelector(`[data-key="${key}"]`);
+        if (!keyElement) return;
+
+        keyElement.classList.add("pressed", "glow");
+
+        setTimeout(() => {
+          keyElement.classList.remove("pressed", "glow");
+        }, 200);
+      }
+
+      // Wave visualizer animation
+      function animateWaveVisualizer() {
+        const bars = document.querySelectorAll(".wave-bar");
+        bars.forEach((bar, index) => {
+          const height = Math.random() * 50 + 10;
+          setTimeout(() => {
+            bar.style.height = height + "px";
+          }, index * 20);
+        });
+
+        setTimeout(() => {
+          bars.forEach((bar) => {
+            bar.style.height = "5px";
+          });
+        }, 300);
+      }
+
+      // Show note indicator
+      function showNoteIndicator(note) {
+        const indicator = document.getElementById("noteIndicator");
+        indicator.textContent = note;
+        indicator.classList.add("active");
+        setTimeout(() => {
+          indicator.classList.remove("active");
+        }, 500);
+      }
+
+      // Theme management
+      function setTheme(theme) {
+        document.body.className = theme === "neon" ? "" : theme;
+        localStorage.setItem("pianoTheme", theme);
+      }
+
+      // Volume control
+      function updateVolume(value) {
+        masterVolume = value / 100;
+        document.getElementById("volumeValue").textContent = value + "%";
+      }
+
+      // Key mappings
+      const keyMappings = {
+        a: "C4",
+        s: "D4",
+        d: "E4",
+        f: "F4",
+        g: "G4",
+        h: "A4",
+        j: "B4",
+        k: "C5",
+        l: "D5",
+        w: "C#4",
+        e: "D#4",
+        t: "F#4",
+        y: "G#4",
+        u: "A#4",
+        o: "C#5",
+        p: "D#5",
+      };
+
+      // Event listeners
+      document.addEventListener("DOMContentLoaded", function () {
+        preloadSounds();
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem("pianoTheme") || "neon";
+        setTheme(savedTheme);
+
+        // Piano key events
+        const keys = document.querySelectorAll(".key");
+        keys.forEach((key) => {
+          key.addEventListener("click", function (e) {
+            const note = this.getAttribute("data-note");
+            const keyCode = this.getAttribute("data-key");
+            playNote(note);
+            animateKey(keyCode);
+          });
+        });
+
+        // Volume slider
+        const volumeSlider = document.getElementById("volumeSlider");
+        volumeSlider.addEventListener("input", function () {
+          updateVolume(this.value);
+        });
+
+        // Keyboard events
+        document.addEventListener("keydown", function (event) {
+          const key = event.key.toLowerCase();
+          const note = keyMappings[key];
+          if (note && !event.repeat) {
+            playNote(note);
+            animateKey(key);
+          }
+        });
+
+        // Initialize audio on first user interaction
+        document.addEventListener("click", initAudio, { once: true });
+        document.addEventListener("keydown", initAudio, { once: true });
+      });
+    </script>
+  </body>
+</html>

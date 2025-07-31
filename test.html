@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Musical Instruments Playground</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* General Body Styles */
+      body {
+        margin: 0;
+        font-family: "Exo 2", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #0a0a0a 0%,
+          #1a1a2e 100%
+        ); /* Deep dark gradient */
+        color: #f5f5f5; /* Light text color */
+        text-align: center;
+        overflow: hidden; /* Hide any overflow from animations */
+      }
+
+      /* Background effects (similar to your projects) */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+            circle at 20% 20%,
+            rgba(233, 69, 96, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(0, 212, 255, 0.1) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      /* Container for the landing page content */
+      .landing-container {
+        background-color: rgba(
+          0,
+          0,
+          0,
+          0.7
+        ); /* Semi-transparent dark background */
+        padding: 50px 70px;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5),
+          0 0 30px rgba(0, 212, 255, 0.4); /* Enhanced shadow with glow */
+        max-width: 800px;
+        width: 90%;
+        animation: fadeInScale 0.8s ease-out forwards; /* Fade-in animation */
+        border: 2px solid rgba(0, 212, 255, 0.3); /* Subtle border glow */
+      }
+
+      @keyframes fadeInScale {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* Heading styles */
+      h1 {
+        font-family: "Orbitron", monospace;
+        font-size: clamp(2.5rem, 6vw, 5rem); /* Responsive font size */
+        margin-bottom: 25px;
+        text-shadow: 0 0 25px rgba(0, 212, 255, 0.8); /* Stronger text glow */
+        animation: pulseGlow 2s infinite alternate; /* Gentle pulsating glow */
+      }
+
+      @keyframes pulseGlow {
+        from {
+          text-shadow: 0 0 20px rgba(0, 212, 255, 0.8),
+            0 0 30px rgba(0, 212, 255, 0.6);
+        }
+        to {
+          text-shadow: 0 0 30px rgba(0, 212, 255, 1),
+            0 0 45px rgba(0, 212, 255, 0.8);
+        }
+      }
+
+      /* Paragraph styles */
+      p {
+        font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+        margin-bottom: 40px;
+        line-height: 1.6;
+        opacity: 0.9;
+      }
+
+      /* Button group layout */
+      .button-group {
+        display: flex;
+        flex-direction: column; /* Stack vertically by default */
+        gap: 25px; /* Space between buttons */
+        margin-bottom: 30px;
+      }
+
+      /* Individual button styles */
+      .landing-btn {
+        display: inline-block;
+        padding: 20px 40px;
+        text-decoration: none;
+        border-radius: 10px;
+        font-size: clamp(1.4rem, 3vw, 2.2rem);
+        font-weight: bold;
+        font-family: "Orbitron", monospace;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        position: relative;
+        overflow: hidden;
+        color: #fff; /* White text for all buttons */
+      }
+
+      /* Specific button colors and glows */
+      .drum-btn {
+        background: linear-gradient(
+          45deg,
+          #e94560,
+          #a03040
+        ); /* Reddish gradient */
+        border: 2px solid #ff6b81;
+      }
+
+      .piano-btn {
+        background: linear-gradient(
+          45deg,
+          #00d4ff,
+          #0098b9
+        ); /* Bluish gradient */
+        border: 2px solid #66e7ff;
+      }
+
+      /* Button hover effects */
+      .landing-btn:hover {
+        transform: translateY(-8px) scale(1.03); /* Lift and slightly scale */
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6), 0 0 40px var(--hover-glow); /* Enhanced shadow with color glow */
+        border-color: var(--hover-glow); /* Border color changes on hover */
+      }
+
+      /* Define hover glow colors for each button */
+      .drum-btn:hover {
+        --hover-glow: #ff6b81;
+      }
+
+      .piano-btn:hover {
+        --hover-glow: #66e7ff;
+      }
+
+      /* Subtle inner shadow on active/pressed state */
+      .landing-btn:active {
+        transform: translateY(-2px) scale(0.98);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3),
+          inset 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Pseudo-element for shimmer effect on hover */
+      .landing-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease-in-out;
+      }
+
+      .landing-btn:hover::before {
+        left: 100%;
+      }
+
+      /* Footer text */
+      .footer-text {
+        font-size: 0.9em;
+        opacity: 0.7;
+        margin-top: 40px;
+      }
+
+      /* Responsive adjustments */
+      @media (min-width: 768px) {
+        .button-group {
+          flex-direction: row; /* Buttons side-by-side on larger screens */
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .landing-container {
+          padding: 30px 20px;
+        }
+        h1 {
+          font-size: 2rem;
+        }
+        p {
+          font-size: 1rem;
+        }
+        .landing-btn {
+          padding: 15px 25px;
+          font-size: 1.6rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="landing-container">
+      <h1>Welcome to Your Music Zone!</h1>
+      <p>Choose an instrument and create some awesome sounds.</p>
+      <div class="button-group">
+        <a href="drumkit.html" class="landing-btn drum-btn">🥁 Play Drum Kit</a>
+        <a href="piano.html" class="landing-btn piano-btn">🎹 Play Piano</a>
+      </div>
+      <p class="footer-text">Built with passion in India ❤️</p>
+    </div>
+  </body>
+</html>
