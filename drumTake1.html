@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8" />
-    <title>Digital Music Studio</title>
+    <title>Enhanced Drum Kit</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;700&display=swap"
       rel="stylesheet"
@@ -19,11 +19,10 @@
         --secondary-bg: #1a1a2e;
         --accent-color: #e94560;
         --text-color: #f5f5f5;
+        --button-bg: #16213e;
+        --button-border: #0f3460;
         --glow-color: #00d4ff;
-        --card-bg: rgba(255, 255, 255, 0.05);
-        --hover-glow: rgba(0, 212, 255, 0.3);
-        --drum-accent: #ff6b35;
-        --piano-accent: #4ecdc4;
+        --shadow-color: rgba(233, 69, 96, 0.5);
       }
 
       body {
@@ -34,54 +33,47 @@
           var(--secondary-bg) 100%
         );
         min-height: 100vh;
-        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         position: relative;
+        overflow-x: hidden;
       }
 
-      /* Animated background particles */
-      .particles {
+      body::before {
+        content: "";
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
+        background: radial-gradient(
+            circle at 20% 20%,
+            rgba(233, 69, 96, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(0, 212, 255, 0.1) 0%,
+            transparent 50%
+          );
         pointer-events: none;
-        z-index: 1;
+        z-index: -1;
       }
 
-      .particle {
-        position: absolute;
-        width: 4px;
-        height: 4px;
-        background: var(--glow-color);
-        border-radius: 50%;
-        animation: float 6s infinite ease-in-out;
-        opacity: 0.6;
-        box-shadow: 0 0 10px var(--glow-color);
-      }
-
-      @keyframes float {
-        0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
-        50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
-      }
-
-      /* Theme selector */
       .theme-selector {
-        position: fixed;
+        position: absolute;
         top: 20px;
         right: 20px;
         display: flex;
         gap: 10px;
-        z-index: 1000;
-        background: rgba(0, 0, 0, 0.3);
-        padding: 10px;
-        border-radius: 25px;
-        backdrop-filter: blur(10px);
+        z-index: 100;
       }
 
       .theme-btn {
-        width: 35px;
-        height: 35px;
+        width: 40px;
+        height: 40px;
         border: none;
         border-radius: 50%;
         cursor: pointer;
@@ -90,317 +82,243 @@
       }
 
       .theme-btn:hover {
-        transform: scale(1.2);
+        transform: scale(1.1);
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
       }
 
-      .theme-btn.neon { background: linear-gradient(45deg, #0a0a0a, #1a1a2e); }
-      .theme-btn.cyberpunk { background: linear-gradient(45deg, #ff006e, #8338ec); }
-      .theme-btn.ocean { background: linear-gradient(45deg, #006994, #00d4ff); }
-      .theme-btn.forest { background: linear-gradient(45deg, #2d5016, #a4de6c); }
-      .theme-btn.sunset { background: linear-gradient(45deg, #ff4500, #ffa500); }
-
-      /* Header */
-      .header {
-        text-align: center;
-        padding: 80px 20px 60px;
-        position: relative;
-        z-index: 10;
+      .theme-btn.neon {
+        background: linear-gradient(45deg, #0a0a0a, #1a1a2e);
+      }
+      .theme-btn.cyberpunk {
+        background: linear-gradient(45deg, #ff006e, #8338ec);
+      }
+      .theme-btn.ocean {
+        background: linear-gradient(45deg, #006994, #00d4ff);
+      }
+      .theme-btn.forest {
+        background: linear-gradient(45deg, #2d5016, #a4de6c);
+      }
+      .theme-btn.sunset {
+        background: linear-gradient(45deg, #ff4500, #ffa500);
       }
 
-      .logo {
+      h1 {
         font-family: "Orbitron", monospace;
-        font-size: clamp(3rem, 8vw, 7rem);
-        font-weight: 900;
+        font-size: clamp(3rem, 8vw, 6rem);
         color: var(--text-color);
-        margin-bottom: 20px;
-        text-shadow: 0 0 15px var(--glow-color);
-        animation: subtleGlow 4s ease-in-out infinite alternate;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 0 20px var(--glow-color);
+        animation: titleGlow 3s ease-in-out infinite alternate;
         position: relative;
       }
 
-      .logo::before {
-        content: "DIGITAL MUSIC STUDIO";
+      @keyframes titleGlow {
+        from {
+          text-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color);
+        }
+        to {
+          text-shadow: 0 0 30px var(--glow-color), 0 0 60px var(--glow-color),
+            0 0 80px var(--glow-color);
+        }
+      }
+
+      .volume-control {
         position: absolute;
-        top: 0;
-        left: 0;
-        background: linear-gradient(45deg, var(--glow-color), var(--accent-color), var(--glow-color));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        opacity: 0.3;
-        z-index: -1;
-      }
-
-      @keyframes subtleGlow {
-        from { 
-          text-shadow: 0 0 10px var(--glow-color);
-        }
-        to { 
-          text-shadow: 0 0 20px var(--glow-color), 0 0 30px var(--glow-color);
-        }
-      }
-
-      .subtitle {
-        font-size: clamp(1.2rem, 3vw, 2rem);
+        top: 20px;
+        left: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
         color: var(--text-color);
-        opacity: 0.9;
-        margin-bottom: 10px;
-        font-weight: 300;
+        font-size: 0.9rem;
       }
 
-      .tagline {
-        font-size: clamp(0.9rem, 2vw, 1.2rem);
-        color: var(--text-color);
-        opacity: 0.7;
-        font-weight: 300;
+      .volume-slider {
+        width: 100px;
+        height: 5px;
+        border-radius: 5px;
+        background: var(--button-border);
+        outline: none;
+        cursor: pointer;
       }
 
-      /* Instruments section */
-      .instruments {
+      .beat-indicator {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--accent-color);
+        opacity: 0;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 20px var(--accent-color);
+      }
+
+      .beat-indicator.active {
+        opacity: 1;
+        animation: beatPulse 0.3s ease-out;
+      }
+
+      @keyframes beatPulse {
+        0% {
+          transform: translateY(-50%) scale(1);
+        }
+        50% {
+          transform: translateY(-50%) scale(1.5);
+        }
+        100% {
+          transform: translateY(-50%) scale(1);
+        }
+      }
+
+      .set {
         display: flex;
         justify-content: center;
-        gap: 40px;
-        padding: 40px 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 10;
+        align-items: center;
+        gap: 15px;
+        max-width: 1000px;
+        width: 95%;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        flex-wrap: nowrap;
+        overflow-x: auto;
       }
 
-      .instrument-card {
-        background: var(--card-bg);
-        backdrop-filter: blur(15px);
-        border-radius: 25px;
-        padding: 40px 30px;
-        width: 400px;
-        border: 2px solid rgba(255, 255, 255, 0.1);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-      }
-
-      .instrument-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        transition: left 0.6s;
-      }
-
-      .instrument-card:hover::before {
-        left: 100%;
-      }
-
-      .instrument-card:hover {
-        transform: translateY(-15px) scale(1.05);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
-        border-color: var(--glow-color);
-      }
-
-      .drum-card {
-        border-color: var(--drum-accent);
-      }
-
-      .drum-card:hover {
-        box-shadow: 0 25px 50px rgba(255, 107, 53, 0.3), 0 0 40px rgba(255, 107, 53, 0.2);
-        border-color: var(--drum-accent);
-      }
-
-      .piano-card {
-        border-color: var(--piano-accent);
-      }
-
-      .piano-card:hover {
-        box-shadow: 0 25px 50px rgba(78, 205, 196, 0.3), 0 0 40px rgba(78, 205, 196, 0.2);
-        border-color: var(--piano-accent);
-      }
-
-      .instrument-icon {
-        font-size: 4rem;
-        margin-bottom: 20px;
-        display: block;
-        animation: bounce 2s infinite;
-      }
-
-      @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-        40% { transform: translateY(-10px); }
-        60% { transform: translateY(-5px); }
-      }
-
-      .instrument-title {
+      .drum {
+        outline: none;
+        border: 3px solid var(--button-border);
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
         font-family: "Orbitron", monospace;
-        font-size: 2.5rem;
         font-weight: 700;
         color: var(--text-color);
-        margin-bottom: 15px;
         text-shadow: 0 0 10px currentColor;
-      }
-
-      .drum-card .instrument-title {
-        color: var(--drum-accent);
-      }
-
-      .piano-card .instrument-title {
-        color: var(--piano-accent);
-      }
-
-      .instrument-description {
-        color: var(--text-color);
-        opacity: 0.8;
-        line-height: 1.6;
-        margin-bottom: 25px;
-        font-size: 1.1rem;
-      }
-
-      .play-button {
-        background: linear-gradient(45deg, var(--accent-color), var(--glow-color));
-        border: none;
-        padding: 15px 30px;
-        border-radius: 50px;
-        color: white;
-        font-family: "Orbitron", monospace;
-        font-weight: 600;
-        font-size: 1.1rem;
+        border-radius: 20px;
+        width: clamp(100px, 12vw, 120px);
+        height: clamp(100px, 12vw, 120px);
+        background: linear-gradient(
+          145deg,
+          var(--button-bg),
+          var(--button-border)
+        );
         cursor: pointer;
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         position: relative;
         overflow: hidden;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        flex-shrink: 0;
       }
 
-      .drum-card .play-button {
-        background: linear-gradient(45deg, var(--drum-accent), #ff8f65);
-      }
-
-      .piano-card .play-button {
-        background: linear-gradient(45deg, var(--piano-accent), #7fece4);
-      }
-
-      .play-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
-      }
-
-      .play-button::before {
+      .drum::before {
         content: "";
         position: absolute;
         top: 0;
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
         transition: left 0.5s;
       }
 
-      .play-button:hover::before {
+      .drum:hover::before {
         left: 100%;
       }
 
-      /* Features section */
-      .features {
-        padding: 80px 20px;
-        text-align: center;
-        position: relative;
-        z-index: 10;
-      }
-
-      .features-title {
-        font-family: "Orbitron", monospace;
-        font-size: clamp(2rem, 5vw, 3.5rem);
-        color: var(--text-color);
-        margin-bottom: 50px;
-        text-shadow: 0 0 20px var(--glow-color);
-      }
-
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-        max-width: 1000px;
-        margin: 0 auto;
-      }
-
-      .feature-item {
-        background: var(--card-bg);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 30px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: all 0.3s ease;
-      }
-
-      .feature-item:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      .drum:hover {
+        transform: translateY(-8px) scale(1.05);
+        box-shadow: 0 15px 25px var(--shadow-color), 0 0 30px var(--glow-color),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
         border-color: var(--glow-color);
       }
 
-      .feature-icon {
-        font-size: 3rem;
-        margin-bottom: 20px;
-        color: var(--glow-color);
+      .drum:active,
+      .drum.pressed {
+        transform: translateY(-3px) scale(0.95);
+        box-shadow: 0 5px 10px var(--shadow-color), 0 0 40px var(--glow-color),
+          inset 0 0 20px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(
+          145deg,
+          var(--accent-color),
+          var(--button-bg)
+        );
       }
 
-      .feature-title {
-        font-family: "Orbitron", monospace;
-        font-size: 1.5rem;
+      .drum-label {
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8rem;
         color: var(--text-color);
-        margin-bottom: 15px;
+        opacity: 0.7;
+        font-weight: 300;
       }
 
-      .feature-description {
-        color: var(--text-color);
-        opacity: 0.8;
-        line-height: 1.6;
-      }
-
-      /* Audio visualizer */
-      .visualizer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100px;
-        display: flex;
-        align-items: end;
-        justify-content: center;
-        gap: 3px;
-        padding: 20px;
-        z-index: 5;
+      .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          var(--glow-color) 0%,
+          transparent 70%
+        );
+        animation: rippleEffect 0.6s ease-out;
         pointer-events: none;
       }
 
-      .vis-bar {
+      @keyframes rippleEffect {
+        from {
+          transform: scale(0);
+          opacity: 1;
+        }
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+
+      .equalizer {
+        position: absolute;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 3px;
+        align-items: end;
+        height: 40px;
+      }
+
+      .eq-bar {
         width: 4px;
-        background: linear-gradient(to top, var(--accent-color), var(--glow-color));
+        background: linear-gradient(
+          to top,
+          var(--accent-color),
+          var(--glow-color)
+        );
         border-radius: 2px;
         transition: height 0.1s ease-out;
-        height: 10px;
-        animation: pulse 2s infinite ease-in-out;
       }
 
-      @keyframes pulse {
-        0%, 100% { height: 10px; opacity: 0.5; }
-        50% { height: 30px; opacity: 1; }
-      }
-
-      /* Footer */
-      .footer {
-        text-align: center;
-        padding: 40px 20px;
+      footer {
         color: var(--text-color);
-        opacity: 0.7;
-        position: relative;
-        z-index: 10;
+        font-family: "Exo 2", sans-serif;
+        margin-top: 2rem;
+        opacity: 0.8;
+        font-size: 0.9rem;
       }
 
       /* Theme variations */
@@ -409,8 +327,8 @@
         --secondary-bg: #ff006e;
         --accent-color: #8338ec;
         --glow-color: #ff006e;
-        --drum-accent: #ff0080;
-        --piano-accent: #8000ff;
+        --button-bg: #1a0033;
+        --button-border: #8338ec;
       }
 
       body.ocean {
@@ -418,8 +336,8 @@
         --secondary-bg: #006994;
         --accent-color: #00d4ff;
         --glow-color: #00ffff;
-        --drum-accent: #0099cc;
-        --piano-accent: #00ccaa;
+        --button-bg: #003355;
+        --button-border: #0099cc;
       }
 
       body.forest {
@@ -427,8 +345,8 @@
         --secondary-bg: #2d5016;
         --accent-color: #a4de6c;
         --glow-color: #76c442;
-        --drum-accent: #8bc34a;
-        --piano-accent: #66bb6a;
+        --button-bg: #1a2e1a;
+        --button-border: #4a7c59;
       }
 
       body.sunset {
@@ -436,251 +354,445 @@
         --secondary-bg: #ff4500;
         --accent-color: #ffa500;
         --glow-color: #ffff00;
-        --drum-accent: #ff6347;
-        --piano-accent: #ffa500;
+        --button-bg: #331100;
+        --button-border: #cc6600;
       }
 
-      /* Responsive design */
       @media (max-width: 768px) {
-        .instruments {
-          flex-direction: column;
-          align-items: center;
-          gap: 30px;
+        .set {
+          gap: 8px;
+          padding: 1rem;
+          flex-wrap: nowrap;
+          width: 98%;
         }
 
-        .instrument-card {
-          width: 90%;
-          max-width: 400px;
+        .drum {
+          width: clamp(70px, 10vw, 90px);
+          height: clamp(70px, 10vw, 90px);
+          font-size: clamp(1.2rem, 2.5vw, 1.8rem);
         }
 
+        .drum-label {
+          font-size: 0.7rem;
+        }
+
+        .volume-control,
         .theme-selector {
-          top: 10px;
-          right: 10px;
-          padding: 8px;
+          position: relative;
+          top: auto;
+          left: auto;
+          right: auto;
+          margin: 10px;
         }
-
-        .theme-btn {
-          width: 30px;
-          height: 30px;
-        }
-
-        .header {
-          padding: 60px 20px 40px;
-        }
-      }
-
-      /* Loading animation */
-      .loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--primary-bg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        opacity: 1;
-        transition: opacity 0.5s ease;
-      }
-
-      .loading-overlay.hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      .loader {
-        width: 60px;
-        height: 60px;
-        border: 3px solid rgba(255, 255, 255, 0.1);
-        border-top: 3px solid var(--glow-color);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
       }
     </style>
   </head>
 
   <body>
-    <div class="loading-overlay" id="loadingOverlay">
-      <div class="loader"></div>
-    </div>
-
-    <div class="particles" id="particles"></div>
-
     <div class="theme-selector">
-      <button class="theme-btn neon" onclick="setTheme('neon')" title="Neon Theme"></button>
-      <button class="theme-btn cyberpunk" onclick="setTheme('cyberpunk')" title="Cyberpunk Theme"></button>
-      <button class="theme-btn ocean" onclick="setTheme('ocean')" title="Ocean Theme"></button>
-      <button class="theme-btn forest" onclick="setTheme('forest')" title="Forest Theme"></button>
-      <button class="theme-btn sunset" onclick="setTheme('sunset')" title="Sunset Theme"></button>
+      <button
+        class="theme-btn neon"
+        onclick="setTheme('neon')"
+        title="Neon Theme"
+      ></button>
+      <button
+        class="theme-btn cyberpunk"
+        onclick="setTheme('cyberpunk')"
+        title="Cyberpunk Theme"
+      ></button>
+      <button
+        class="theme-btn ocean"
+        onclick="setTheme('ocean')"
+        title="Ocean Theme"
+      ></button>
+      <button
+        class="theme-btn forest"
+        onclick="setTheme('forest')"
+        title="Forest Theme"
+      ></button>
+      <button
+        class="theme-btn sunset"
+        onclick="setTheme('sunset')"
+        title="Sunset Theme"
+      ></button>
     </div>
 
-    <header class="header">
-      <h1 class="logo">DIGITAL MUSIC STUDIO</h1>
-      <p class="subtitle">Experience Music Like Never Before</p>
-      <p class="tagline">Premium virtual instruments at your fingertips</p>
-    </header>
-
-    <section class="instruments">
-      <div class="instrument-card drum-card" onclick="openDrumKit()">
-        <span class="instrument-icon">🥁</span>
-        <h2 class="instrument-title">DRUM KIT</h2>
-        <p class="instrument-description">
-          Experience the power of rhythm with our enhanced digital drum kit. 
-          Multiple themes, realistic sound effects, and responsive controls.
-        </p>
-        <button class="play-button">Play Drums</button>
-      </div>
-
-      <div class="instrument-card piano-card" onclick="openPiano()">
-        <span class="instrument-icon">🎹</span>
-        <h2 class="instrument-title">PIANO</h2>
-        <p class="instrument-description">
-          Create beautiful melodies with our premium virtual piano. 
-          Rich harmonic sounds, visual feedback, and multiple octaves.
-        </p>
-        <button class="play-button">Play Piano</button>
-      </div>
-    </section>
-
-    <section class="features">
-      <h2 class="features-title">Premium Features</h2>
-      <div class="features-grid">
-        <div class="feature-item">
-          <div class="feature-icon">🎨</div>
-          <h3 class="feature-title">Multiple Themes</h3>
-          <p class="feature-description">Choose from 5 stunning themes including Neon, Cyberpunk, Ocean, Forest, and Sunset.</p>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon">🔊</div>
-          <h3 class="feature-title">High-Quality Audio</h3>
-          <p class="feature-description">Experience crystal-clear sound with Web Audio API and synthetic sound generation.</p>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon">📱</div>
-          <h3 class="feature-title">Responsive Design</h3>
-          <p class="feature-description">Optimized for all devices - desktop, tablet, and mobile with touch support.</p>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon">✨</div>
-          <h3 class="feature-title">Visual Effects</h3>
-          <p class="feature-description">Immersive visual feedback with animations, ripple effects, and real-time visualizers.</p>
-        </div>
-      </div>
-    </section>
-
-    <div class="visualizer" id="visualizer">
-      <div class="vis-bar" style="animation-delay: 0s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.1s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.2s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.3s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.4s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.5s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.6s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.7s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.8s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.9s;"></div>
+    <div class="volume-control">
+      <span>🔊</span>
+      <input
+        type="range"
+        class="volume-slider"
+        min="0"
+        max="100"
+        value="70"
+        id="volumeSlider"
+      />
+      <span id="volumeValue">70%</span>
     </div>
 
-    <footer class="footer">
-      <p>Made with ❤️ in India | Digital Music Studio &copy; 2025</p>
-    </footer>
+    <div class="beat-indicator" id="beatIndicator"></div>
+
+    <h1 id="title">🥁 DRUM KIT 🥁</h1>
+
+    <div class="set">
+      <div style="position: relative">
+        <button class="a drum" data-sound="tom1">A</button>
+        <div class="drum-label">Tom 1</div>
+      </div>
+      <div style="position: relative">
+        <button class="s drum" data-sound="tom2">S</button>
+        <div class="drum-label">Tom 2</div>
+      </div>
+      <div style="position: relative">
+        <button class="d drum" data-sound="tom3">D</button>
+        <div class="drum-label">Tom 3</div>
+      </div>
+      <div style="position: relative">
+        <button class="f drum" data-sound="tom4">F</button>
+        <div class="drum-label">Tom 4</div>
+      </div>
+      <div style="position: relative">
+        <button class="g drum" data-sound="snare">G</button>
+        <div class="drum-label">Snare</div>
+      </div>
+      <div style="position: relative">
+        <button class="h drum" data-sound="crash">H</button>
+        <div class="drum-label">Crash</div>
+      </div>
+      <div style="position: relative">
+        <button class="j drum" data-sound="kick">J</button>
+        <div class="drum-label">Kick</div>
+      </div>
+    </div>
+
+    <div class="equalizer" id="equalizer">
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+    </div>
+
+    <footer>Made with ❤️ in India | Enhanced with Dynamic Effects</footer>
 
     <script>
-      // Theme management
-      function setTheme(theme) {
-        document.body.className = theme === 'neon' ? '' : theme;
-        localStorage.setItem('musicStudioTheme', theme);
-      }
+      // Audio context for better sound management
+      let audioContext;
+      let masterVolume = 0.7;
+      let sounds = {};
 
-      // Navigation functions
-      function openDrumKit() {
-        // In a real implementation, you would navigate to the drum kit page
-        window.location.href = 'drumTake1.html';
-        
-      }
-
-      function openPiano() {
-        // In a real implementation, you would navigate to the piano page
-        window.location.href = 'pianoFull.html';
-      }
-
-      // Create floating particles
-      function createParticles() {
-        const particlesContainer = document.getElementById('particles');
-        const particleCount = 50;
-
-        for (let i = 0; i < particleCount; i++) {
-          const particle = document.createElement('div');
-          particle.className = 'particle';
-          particle.style.left = Math.random() * 100 + '%';
-          particle.style.top = Math.random() * 100 + '%';
-          particle.style.animationDelay = Math.random() * 6 + 's';
-          particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
-          particlesContainer.appendChild(particle);
+      // Initialize audio context
+      function initAudio() {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
         }
       }
 
-      // Initialize on page load
-      document.addEventListener('DOMContentLoaded', function() {
+      // Preload sounds with web audio API fallback
+      function preloadSounds() {
+        const soundMap = {
+          a: "tom1",
+          s: "tom2",
+          d: "tom3",
+          f: "tom4",
+          g: "snare",
+          h: "crash",
+          j: "kick",
+        };
+
+        Object.entries(soundMap).forEach(([key, sound]) => {
+          // Create multiple instances for overlapping sounds
+          sounds[key] = [];
+          for (let i = 0; i < 3; i++) {
+            sounds[key][i] = createDrumSound(sound);
+          }
+        });
+      }
+
+      // Create drum sound that uses original file paths
+      function createDrumSound(type) {
+        return {
+          audioElement: null,
+          play: function () {
+            // Create new audio element each time for overlapping sounds
+            this.audioElement = new Audio(this.getFilePath(type));
+            this.audioElement.volume = masterVolume;
+            this.audioElement.play().catch((e) => {
+              // Fallback to synthetic sound if file not found
+              this.createSyntheticSound(type);
+            });
+          },
+          getFilePath: function (drumType) {
+            switch (drumType) {
+              case "tom1":
+                return "sounds/tom-1.mp3";
+              case "tom2":
+                return "sounds/tom-2.mp3";
+              case "tom3":
+                return "sounds/tom-3.mp3";
+              case "tom4":
+                return "sounds/tom-4.mp3";
+              case "snare":
+                return "sounds/snare.mp3";
+              case "crash":
+                return "sounds/crash.mp3";
+              case "kick":
+                return "sounds/kick-bass.mp3";
+              default:
+                return "";
+            }
+          },
+          createSyntheticSound: function (drumType) {
+            if (!audioContext) return;
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            // Different sound characteristics for each drum
+            switch (drumType) {
+              case "tom1":
+                oscillator.frequency.setValueAtTime(
+                  200,
+                  audioContext.currentTime
+                );
+                oscillator.frequency.exponentialRampToValueAtTime(
+                  50,
+                  audioContext.currentTime + 0.3
+                );
+                break;
+              case "tom2":
+                oscillator.frequency.setValueAtTime(
+                  150,
+                  audioContext.currentTime
+                );
+                oscillator.frequency.exponentialRampToValueAtTime(
+                  40,
+                  audioContext.currentTime + 0.3
+                );
+                break;
+              case "tom3":
+                oscillator.frequency.setValueAtTime(
+                  100,
+                  audioContext.currentTime
+                );
+                oscillator.frequency.exponentialRampToValueAtTime(
+                  30,
+                  audioContext.currentTime + 0.3
+                );
+                break;
+              case "tom4":
+                oscillator.frequency.setValueAtTime(
+                  80,
+                  audioContext.currentTime
+                );
+                oscillator.frequency.exponentialRampToValueAtTime(
+                  25,
+                  audioContext.currentTime + 0.3
+                );
+                break;
+              case "snare":
+                oscillator.type = "white-noise";
+                oscillator.frequency.setValueAtTime(
+                  400,
+                  audioContext.currentTime
+                );
+                filter.frequency.setValueAtTime(2000, audioContext.currentTime);
+                break;
+              case "crash":
+                oscillator.type = "white-noise";
+                oscillator.frequency.setValueAtTime(
+                  800,
+                  audioContext.currentTime
+                );
+                filter.frequency.setValueAtTime(8000, audioContext.currentTime);
+                break;
+              case "kick":
+                oscillator.frequency.setValueAtTime(
+                  60,
+                  audioContext.currentTime
+                );
+                oscillator.frequency.exponentialRampToValueAtTime(
+                  20,
+                  audioContext.currentTime + 0.1
+                );
+                break;
+            }
+
+            gainNode.gain.setValueAtTime(
+              masterVolume * 0.3,
+              audioContext.currentTime
+            );
+            gainNode.gain.exponentialRampToValueAtTime(
+              0.01,
+              audioContext.currentTime + 0.3
+            );
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+          },
+        };
+      }
+
+      // Enhanced sound playing with visual feedback
+      function makeSound(key) {
+        if (sounds[key]) {
+          // Find available sound instance
+          const availableSound = sounds[key].find((sound) => !sound.playing);
+          if (availableSound) {
+            availableSound.playing = true;
+            availableSound.play();
+            setTimeout(() => (availableSound.playing = false), 300);
+          }
+        }
+
+        // Trigger visual effects
+        animateEqualizer();
+        showBeatIndicator();
+      }
+
+      // Create ripple effect
+      function createRipple(button, event) {
+        const ripple = document.createElement("div");
+        ripple.classList.add("ripple");
+
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x =
+          (event ? event.clientX : rect.left + rect.width / 2) -
+          rect.left -
+          size / 2;
+        const y =
+          (event ? event.clientY : rect.top + rect.height / 2) -
+          rect.top -
+          size / 2;
+
+        ripple.style.width = ripple.style.height = size + "px";
+        ripple.style.left = x + "px";
+        ripple.style.top = y + "px";
+
+        button.appendChild(ripple);
+
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      }
+
+      // Enhanced button animation
+      function buttonAnimation(currentKey) {
+        const activeButton = document.querySelector("." + currentKey);
+        if (!activeButton) return;
+
+        activeButton.classList.add("pressed");
+        createRipple(activeButton);
+
+        setTimeout(() => {
+          activeButton.classList.remove("pressed");
+        }, 150);
+      }
+
+      // Animate equalizer bars
+      function animateEqualizer() {
+        const bars = document.querySelectorAll(".eq-bar");
+        bars.forEach((bar) => {
+          const height = Math.random() * 30 + 5;
+          bar.style.height = height + "px";
+        });
+
+        setTimeout(() => {
+          bars.forEach((bar) => {
+            bar.style.height = "5px";
+          });
+        }, 200);
+      }
+
+      // Show beat indicator
+      function showBeatIndicator() {
+        const indicator = document.getElementById("beatIndicator");
+        indicator.classList.add("active");
+        setTimeout(() => {
+          indicator.classList.remove("active");
+        }, 300);
+      }
+
+      // Theme management
+      function setTheme(theme) {
+        document.body.className = theme === "neon" ? "" : theme;
+        localStorage.setItem("drumKitTheme", theme);
+      }
+
+      // Volume control
+      function updateVolume(value) {
+        masterVolume = value / 100;
+        document.getElementById("volumeValue").textContent = value + "%";
+      }
+
+      // Event listeners
+      document.addEventListener("DOMContentLoaded", function () {
+        preloadSounds();
+
         // Load saved theme
-        const savedTheme = localStorage.getItem('musicStudioTheme') || 'neon';
+        const savedTheme = localStorage.getItem("drumKitTheme") || "neon";
         setTheme(savedTheme);
 
-        // Create particles
-        createParticles();
-
-        // Hide loading overlay
-        setTimeout(() => {
-          document.getElementById('loadingOverlay').classList.add('hidden');
-        }, 1500);
-
-        // Add click sound effect simulation
-        document.querySelectorAll('.instrument-card, .play-button').forEach(element => {
-          element.addEventListener('click', function() {
-            // Visual feedback
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-              this.style.transform = '';
-            }, 150);
+        // Drum button events
+        const drums = document.querySelectorAll(".drum");
+        drums.forEach((drum) => {
+          drum.addEventListener("click", function (e) {
+            const key = this.classList[0];
+            makeSound(key);
+            buttonAnimation(key);
+            createRipple(this, e);
           });
         });
 
-        // Animate visualizer bars randomly
-        setInterval(() => {
-          document.querySelectorAll('.vis-bar').forEach(bar => {
-            const height = Math.random() * 40 + 10;
-            bar.style.height = height + 'px';
-          });
-        }, 200);
+        // Volume slider
+        const volumeSlider = document.getElementById("volumeSlider");
+        volumeSlider.addEventListener("input", function () {
+          updateVolume(this.value);
+        });
+
+        // Keyboard events
+        document.addEventListener("keydown", function (event) {
+          const key = event.key.toLowerCase();
+          if (["a", "s", "d", "f", "g", "h", "j"].includes(key)) {
+            makeSound(key);
+            buttonAnimation(key);
+          }
+        });
+
+        // Initialize audio on first user interaction
+        document.addEventListener("click", initAudio, { once: true });
+        document.addEventListener("keydown", initAudio, { once: true });
       });
 
-      // Add hover sound effects (visual only)
-      document.addEventListener('mouseover', function(e) {
-        if (e.target.classList.contains('instrument-card')) {
-          e.target.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      // Add keyboard visual feedback
+      document.addEventListener("keydown", function (event) {
+        const key = event.key.toLowerCase();
+        const button = document.querySelector("." + key);
+        if (button && !button.classList.contains("pressed")) {
+          button.style.transform = "translateY(-3px) scale(0.95)";
         }
       });
 
-      // Keyboard shortcuts
-      document.addEventListener('keydown', function(e) {
-        if (e.key === '1') openDrumKit();
-        if (e.key === '2') openPiano();
-        if (e.key === 't' || e.key === 'T') {
-          // Cycle through themes
-          const themes = ['neon', 'cyberpunk', 'ocean', 'forest', 'sunset'];
-          const currentTheme = localStorage.getItem('musicStudioTheme') || 'neon';
-          const currentIndex = themes.indexOf(currentTheme);
-          const nextTheme = themes[(currentIndex + 1) % themes.length];
-          setTheme(nextTheme);
+      document.addEventListener("keyup", function (event) {
+        const key = event.key.toLowerCase();
+        const button = document.querySelector("." + key);
+        if (button) {
+          button.style.transform = "";
         }
       });
     </script>
   </body>
 </html>
+
