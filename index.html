@@ -61,8 +61,15 @@
       }
 
       @keyframes float {
-        0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
-        50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 0.6;
+        }
+        50% {
+          transform: translateY(-20px) rotate(180deg);
+          opacity: 1;
+        }
       }
 
       /* Theme selector */
@@ -94,11 +101,21 @@
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
       }
 
-      .theme-btn.neon { background: linear-gradient(45deg, #0a0a0a, #1a1a2e); }
-      .theme-btn.cyberpunk { background: linear-gradient(45deg, #ff006e, #8338ec); }
-      .theme-btn.ocean { background: linear-gradient(45deg, #006994, #00d4ff); }
-      .theme-btn.forest { background: linear-gradient(45deg, #2d5016, #a4de6c); }
-      .theme-btn.sunset { background: linear-gradient(45deg, #ff4500, #ffa500); }
+      .theme-btn.neon {
+        background: linear-gradient(45deg, #0a0a0a, #1a1a2e);
+      }
+      .theme-btn.cyberpunk {
+        background: linear-gradient(45deg, #ff006e, #8338ec);
+      }
+      .theme-btn.ocean {
+        background: linear-gradient(45deg, #006994, #00d4ff);
+      }
+      .theme-btn.forest {
+        background: linear-gradient(45deg, #2d5016, #a4de6c);
+      }
+      .theme-btn.sunset {
+        background: linear-gradient(45deg, #ff4500, #ffa500);
+      }
 
       /* Header */
       .header {
@@ -124,7 +141,12 @@
         position: absolute;
         top: 0;
         left: 0;
-        background: linear-gradient(45deg, var(--glow-color), var(--accent-color), var(--glow-color));
+        background: linear-gradient(
+          45deg,
+          var(--glow-color),
+          var(--accent-color),
+          var(--glow-color)
+        );
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -133,10 +155,10 @@
       }
 
       @keyframes subtleGlow {
-        from { 
+        from {
           text-shadow: 0 0 10px var(--glow-color);
         }
-        to { 
+        to {
           text-shadow: 0 0 20px var(--glow-color), 0 0 30px var(--glow-color);
         }
       }
@@ -189,7 +211,12 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
         transition: left 0.6s;
       }
 
@@ -208,7 +235,8 @@
       }
 
       .drum-card:hover {
-        box-shadow: 0 25px 50px rgba(255, 107, 53, 0.3), 0 0 40px rgba(255, 107, 53, 0.2);
+        box-shadow: 0 25px 50px rgba(255, 107, 53, 0.3),
+          0 0 40px rgba(255, 107, 53, 0.2);
         border-color: var(--drum-accent);
       }
 
@@ -217,7 +245,8 @@
       }
 
       .piano-card:hover {
-        box-shadow: 0 25px 50px rgba(78, 205, 196, 0.3), 0 0 40px rgba(78, 205, 196, 0.2);
+        box-shadow: 0 25px 50px rgba(78, 205, 196, 0.3),
+          0 0 40px rgba(78, 205, 196, 0.2);
         border-color: var(--piano-accent);
       }
 
@@ -229,9 +258,19 @@
       }
 
       @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-        40% { transform: translateY(-10px); }
-        60% { transform: translateY(-5px); }
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-10px);
+        }
+        60% {
+          transform: translateY(-5px);
+        }
       }
 
       .instrument-title {
@@ -260,7 +299,11 @@
       }
 
       .play-button {
-        background: linear-gradient(45deg, var(--accent-color), var(--glow-color));
+        background: linear-gradient(
+          45deg,
+          var(--accent-color),
+          var(--glow-color)
+        );
         border: none;
         padding: 15px 30px;
         border-radius: 50px;
@@ -297,7 +340,12 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
         transition: left 0.5s;
       }
 
@@ -381,7 +429,11 @@
 
       .vis-bar {
         width: 4px;
-        background: linear-gradient(to top, var(--accent-color), var(--glow-color));
+        background: linear-gradient(
+          to top,
+          var(--accent-color),
+          var(--glow-color)
+        );
         border-radius: 2px;
         transition: height 0.1s ease-out;
         height: 10px;
@@ -389,8 +441,15 @@
       }
 
       @keyframes pulse {
-        0%, 100% { height: 10px; opacity: 0.5; }
-        50% { height: 30px; opacity: 1; }
+        0%,
+        100% {
+          height: 10px;
+          opacity: 0.5;
+        }
+        50% {
+          height: 30px;
+          opacity: 1;
+        }
       }
 
       /* Footer */
@@ -500,8 +559,12 @@
       }
 
       @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
     </style>
   </head>
@@ -514,11 +577,31 @@
     <div class="particles" id="particles"></div>
 
     <div class="theme-selector">
-      <button class="theme-btn neon" onclick="setTheme('neon')" title="Neon Theme"></button>
-      <button class="theme-btn cyberpunk" onclick="setTheme('cyberpunk')" title="Cyberpunk Theme"></button>
-      <button class="theme-btn ocean" onclick="setTheme('ocean')" title="Ocean Theme"></button>
-      <button class="theme-btn forest" onclick="setTheme('forest')" title="Forest Theme"></button>
-      <button class="theme-btn sunset" onclick="setTheme('sunset')" title="Sunset Theme"></button>
+      <button
+        class="theme-btn neon"
+        onclick="setTheme('neon')"
+        title="Neon Theme"
+      ></button>
+      <button
+        class="theme-btn cyberpunk"
+        onclick="setTheme('cyberpunk')"
+        title="Cyberpunk Theme"
+      ></button>
+      <button
+        class="theme-btn ocean"
+        onclick="setTheme('ocean')"
+        title="Ocean Theme"
+      ></button>
+      <button
+        class="theme-btn forest"
+        onclick="setTheme('forest')"
+        title="Forest Theme"
+      ></button>
+      <button
+        class="theme-btn sunset"
+        onclick="setTheme('sunset')"
+        title="Sunset Theme"
+      ></button>
     </div>
 
     <header class="header">
@@ -532,7 +615,7 @@
         <span class="instrument-icon">🥁</span>
         <h2 class="instrument-title">DRUM KIT</h2>
         <p class="instrument-description">
-          Experience the power of rhythm with our enhanced digital drum kit. 
+          Experience the power of rhythm with our enhanced digital drum kit.
           Multiple themes, realistic sound effects, and responsive controls.
         </p>
         <button class="play-button">Play Drums</button>
@@ -542,8 +625,8 @@
         <span class="instrument-icon">🎹</span>
         <h2 class="instrument-title">PIANO</h2>
         <p class="instrument-description">
-          Create beautiful melodies with our premium virtual piano. 
-          Rich harmonic sounds, visual feedback, and multiple octaves.
+          Create beautiful melodies with our premium virtual piano. Rich
+          harmonic sounds, visual feedback, and multiple octaves.
         </p>
         <button class="play-button">Play Piano</button>
       </div>
@@ -555,37 +638,49 @@
         <div class="feature-item">
           <div class="feature-icon">🎨</div>
           <h3 class="feature-title">Multiple Themes</h3>
-          <p class="feature-description">Choose from 5 stunning themes including Neon, Cyberpunk, Ocean, Forest, and Sunset.</p>
+          <p class="feature-description">
+            Choose from 5 stunning themes including Neon, Cyberpunk, Ocean,
+            Forest, and Sunset.
+          </p>
         </div>
         <div class="feature-item">
           <div class="feature-icon">🔊</div>
           <h3 class="feature-title">High-Quality Audio</h3>
-          <p class="feature-description">Experience crystal-clear sound with Web Audio API and synthetic sound generation.</p>
+          <p class="feature-description">
+            Experience crystal-clear sound with Web Audio API and synthetic
+            sound generation.
+          </p>
         </div>
         <div class="feature-item">
           <div class="feature-icon">📱</div>
           <h3 class="feature-title">Responsive Design</h3>
-          <p class="feature-description">Optimized for all devices - desktop, tablet, and mobile with touch support.</p>
+          <p class="feature-description">
+            Optimized for all devices - desktop, tablet, and mobile with touch
+            support.
+          </p>
         </div>
         <div class="feature-item">
           <div class="feature-icon">✨</div>
           <h3 class="feature-title">Visual Effects</h3>
-          <p class="feature-description">Immersive visual feedback with animations, ripple effects, and real-time visualizers.</p>
+          <p class="feature-description">
+            Immersive visual feedback with animations, ripple effects, and
+            real-time visualizers.
+          </p>
         </div>
       </div>
     </section>
 
     <div class="visualizer" id="visualizer">
-      <div class="vis-bar" style="animation-delay: 0s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.1s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.2s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.3s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.4s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.5s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.6s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.7s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.8s;"></div>
-      <div class="vis-bar" style="animation-delay: 0.9s;"></div>
+      <div class="vis-bar" style="animation-delay: 0s"></div>
+      <div class="vis-bar" style="animation-delay: 0.1s"></div>
+      <div class="vis-bar" style="animation-delay: 0.2s"></div>
+      <div class="vis-bar" style="animation-delay: 0.3s"></div>
+      <div class="vis-bar" style="animation-delay: 0.4s"></div>
+      <div class="vis-bar" style="animation-delay: 0.5s"></div>
+      <div class="vis-bar" style="animation-delay: 0.6s"></div>
+      <div class="vis-bar" style="animation-delay: 0.7s"></div>
+      <div class="vis-bar" style="animation-delay: 0.8s"></div>
+      <div class="vis-bar" style="animation-delay: 0.9s"></div>
     </div>
 
     <footer class="footer">
@@ -595,42 +690,49 @@
     <script>
       // Theme management
       function setTheme(theme) {
-        document.body.className = theme === 'neon' ? '' : theme;
-        localStorage.setItem('musicStudioTheme', theme);
+        document.body.className = theme === "neon" ? "" : theme;
+        localStorage.setItem("musicStudioTheme", theme);
       }
 
       // Navigation functions
       function openDrumKit() {
         // In a real implementation, you would navigate to the drum kit page
-        window.location.href = 'drumFull.html';
-        
+        // For demo purposes, we'll show an alert
+        alert(
+          "Opening Drum Kit... In a real implementation, this would navigate to your drum kit page."
+        );
+        window.location.href = "drumtake1.html";
       }
 
       function openPiano() {
         // In a real implementation, you would navigate to the piano page
-        window.location.href = 'pianoFull.html';
+        // For demo purposes, we'll show an alert
+        alert(
+          "Opening Piano... In a real implementation, this would navigate to your piano page."
+        );
+        window.location.href = "pianoFull.html";
       }
 
       // Create floating particles
       function createParticles() {
-        const particlesContainer = document.getElementById('particles');
+        const particlesContainer = document.getElementById("particles");
         const particleCount = 50;
 
         for (let i = 0; i < particleCount; i++) {
-          const particle = document.createElement('div');
-          particle.className = 'particle';
-          particle.style.left = Math.random() * 100 + '%';
-          particle.style.top = Math.random() * 100 + '%';
-          particle.style.animationDelay = Math.random() * 6 + 's';
-          particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+          const particle = document.createElement("div");
+          particle.className = "particle";
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.top = Math.random() * 100 + "%";
+          particle.style.animationDelay = Math.random() * 6 + "s";
+          particle.style.animationDuration = Math.random() * 4 + 4 + "s";
           particlesContainer.appendChild(particle);
         }
       }
 
       // Initialize on page load
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("DOMContentLoaded", function () {
         // Load saved theme
-        const savedTheme = localStorage.getItem('musicStudioTheme') || 'neon';
+        const savedTheme = localStorage.getItem("musicStudioTheme") || "neon";
         setTheme(savedTheme);
 
         // Create particles
@@ -638,44 +740,48 @@
 
         // Hide loading overlay
         setTimeout(() => {
-          document.getElementById('loadingOverlay').classList.add('hidden');
+          document.getElementById("loadingOverlay").classList.add("hidden");
         }, 1500);
 
         // Add click sound effect simulation
-        document.querySelectorAll('.instrument-card, .play-button').forEach(element => {
-          element.addEventListener('click', function() {
-            // Visual feedback
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-              this.style.transform = '';
-            }, 150);
+        document
+          .querySelectorAll(".instrument-card, .play-button")
+          .forEach((element) => {
+            element.addEventListener("click", function () {
+              // Visual feedback
+              this.style.transform = "scale(0.95)";
+              setTimeout(() => {
+                this.style.transform = "";
+              }, 150);
+            });
           });
-        });
 
         // Animate visualizer bars randomly
         setInterval(() => {
-          document.querySelectorAll('.vis-bar').forEach(bar => {
+          document.querySelectorAll(".vis-bar").forEach((bar) => {
             const height = Math.random() * 40 + 10;
-            bar.style.height = height + 'px';
+            bar.style.height = height + "px";
           });
         }, 200);
       });
 
       // Add hover sound effects (visual only)
-      document.addEventListener('mouseover', function(e) {
-        if (e.target.classList.contains('instrument-card')) {
-          e.target.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      document.addEventListener("mouseover", function (e) {
+        if (e.target.classList.contains("instrument-card")) {
+          e.target.style.transition =
+            "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
         }
       });
 
       // Keyboard shortcuts
-      document.addEventListener('keydown', function(e) {
-        if (e.key === '1') openDrumKit();
-        if (e.key === '2') openPiano();
-        if (e.key === 't' || e.key === 'T') {
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "1") openDrumKit();
+        if (e.key === "2") openPiano();
+        if (e.key === "t" || e.key === "T") {
           // Cycle through themes
-          const themes = ['neon', 'cyberpunk', 'ocean', 'forest', 'sunset'];
-          const currentTheme = localStorage.getItem('musicStudioTheme') || 'neon';
+          const themes = ["neon", "cyberpunk", "ocean", "forest", "sunset"];
+          const currentTheme =
+            localStorage.getItem("musicStudioTheme") || "neon";
           const currentIndex = themes.indexOf(currentTheme);
           const nextTheme = themes[(currentIndex + 1) % themes.length];
           setTheme(nextTheme);
